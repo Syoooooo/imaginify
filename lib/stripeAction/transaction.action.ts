@@ -12,7 +12,7 @@ declare type CheckoutTransactionParams = {
   buyerId: string;
 };
 
-export async function checkoutCredit(
+export async function checkoutCredits(
   transaction: CheckoutTransactionParams
 ) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);

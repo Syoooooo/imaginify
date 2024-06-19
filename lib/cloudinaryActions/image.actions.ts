@@ -185,3 +185,43 @@ export async function getAllImages({
     handleError(error);
   }
 }
+
+// GET IMAGES BY USER
+export async function getUserImages({
+  limit = 9,
+  page = 1,
+  userId,
+}: {
+  limit?: number;
+  page: number;
+  userId: string;
+}) {
+  try {
+
+    const skipAmount = (Number(page) - 1) * limit;
+
+    const images = await db.image.findMany({
+      where: { authorId: userId },
+      orderBy: { updatedAt: 'desc' },
+      skip: skipAmount,
+      take: limit,
+      include: {
+        author: true, // Assuming you want to populate the user
+      },
+    });
+    
+    const totalImages = await db.image.count({
+      where: { authorId: userId },
+    });
+    
+    return {
+      data: images,
+      totalPages: Math.ceil(totalImages / limit),
+    };
+    
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+
